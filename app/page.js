@@ -3,6 +3,7 @@
 import { useState } from "react";
 import LabelandCount from "./components/LabelandCount";
 import { ArrowBigLeft, ArrowBigRightIcon, ArrowRightCircle, Camera } from 'lucide-react';
+import Image from "next/image";
 
 export default function Home() {
   const [username, setUsername] = useState(""); // For the GitHub username input
@@ -53,7 +54,7 @@ export default function Home() {
       {userData && (
         <>
           <div className="bg-white text-center p-6 mt-6 rounded-md shadow-md w-full max-w-md">
-            <img
+            <Image
               src={userData.avatar_url}
               alt={`${userData.login}'s avatar`}
               className="w-32 h-32 rounded-full mx-auto mb-4"
