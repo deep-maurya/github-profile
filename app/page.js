@@ -3,6 +3,7 @@
 import { useState } from "react";
 import LabelandCount from "./components/LabelandCount";
 import { ArrowBigLeft, ArrowBigRightIcon, ArrowRightCircle, Camera } from 'lucide-react';
+import localStorageUtils from "./utils/localStrorag";
 
 export default function Home() {
   const [username, setUsername] = useState(""); // For the GitHub username input
@@ -22,7 +23,12 @@ export default function Home() {
         throw new Error("User not found");
       }
       const data = await response.json();
-      setUserData(data); // Set the fetched data
+      const searchRecords = localStorageUtils.getItem("searchRecords") || [];
+      if (!searchRecords.includes(username)) {
+        searchRecords.push(username);
+        localStorageUtils.setItem("searchRecords", searchRecords);
+      }
+      setUserData(data);
     } catch (err) {
       setError(err.message);
       setUserData(null);
@@ -72,6 +78,20 @@ export default function Home() {
           </button>
 
          </>
+      )}
+      {localStorageUtils.getItem("searchRecords")?.length > 0 ? (
+        <div className="bg-white text-center p-4 mt-6 rounded-md shadow-md w-full max-w-md">
+          <h3 className="text-lg font-bold text-gray-700 pb-2 border-b-[1px]">Search History</h3>
+          <ul className="text-gray-600 pt-2">
+            {localStorageUtils.getItem("searchRecords").map((record, index) => (
+              <li key={index} className="mb-2 font-bold">
+                {record}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <p className="text-red-500 font-bold max-w-md p-2 text-center w-full bg-red-200 mt-6">No search history available.</p>
       )}
     </div>
   );
