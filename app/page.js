@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import LabelandCount from "./components/LabelandCount";
 import { ArrowRightCircle } from 'lucide-react';
 import localStorageUtils from "./utils/localStrorag";
+import useInternetStatus from "@/hooks/ChackOnline";
 
 export default function Home() {
   const [username, setUsername] = useState("");
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
   const [searchRecords, setSearchRecords] = useState([]);
+  const isOnline = useInternetStatus();
 
   useEffect(() => {
     const records = localStorageUtils.getItem("searchRecords") || [];
@@ -45,8 +47,9 @@ export default function Home() {
 
   return (
     <div className="bg-gray-100 h-screen flex flex-col items-center justify-center p-4">
+      {!isOnline && <p className="text-red-500 bg-red-200 w-full max-w-md mb-5 font-extrabold p-3 rounded-lg text-center mt-4">{"You're not connected to internet"}</p>}
       {error && <p className="text-red-500 bg-red-200 w-full max-w-md mb-5 font-extrabold p-3 rounded-lg text-center mt-4">{error}</p>}
-      {!userData && (
+      {!userData && isOnline && (
         <div className="bg-white p-6 rounded-md shadow-md w-full max-w-md text-center">
           <h1 className="text-xl font-bold mb-4 text-gray-700">GitHub User Data Extractor</h1>
           <input
